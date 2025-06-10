@@ -1,0 +1,57 @@
+name: Astronomer CI/CD - Deploy Airflow & dbt
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  ASTRO_API_TOKEN: ${{ secrets.ASTRO_API_TOKEN }}
+
+jobs:
+  lint-test:
+    name: Lint and Test DAGs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Airflow and Dependencies
+        run: |
+          pip install apache-airflow pytest astronomer-cosmos==1.8.2 pydantic
+          airflow db init
+          airflow db upgrade
+
+      - name: Test DAG integrity
+        run: |
+          python -c "import airflow; from airflow.models import DagBag; d = DagBag(include_examples=False); assert not d.import_errors, d.import_errors"
+
+  deploy:
+    name: Deploy to Astronomer Cloud
+    runs-on: ubuntu-latest
+    needs: lint-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install astronomer-cosmos in Docker Image
+        run: |
+          echo "RUN pip install astronomer-cosmos==1.8.2" >> Dockerfile
+
+      - name: Deploy to Astro (Force Full Deployment)
+        uses: astronomer/deploy-action@v0.9.0
+        with:
+          deployment-id: ${{ secrets.ASTRO_DEPLOYMENT_ID }}
+          deploy-type: image-and-dags
+          parse: true
+          force: true  # Ensures full redeployment
+

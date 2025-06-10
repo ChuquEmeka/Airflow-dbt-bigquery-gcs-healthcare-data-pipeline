@@ -1,0 +1,7 @@
+
+target/
+dbt_packages/
+logs/
+# Ignore service account key files
+dags/keyfiles/*.json
+dags/keyfiles/

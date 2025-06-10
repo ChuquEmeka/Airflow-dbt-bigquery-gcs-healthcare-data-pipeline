@@ -1,0 +1,15 @@
+project:
+    name: new-airflow-dbt-astro-hc
+
+# global:
+#   dagOnlyDeployment:
+#     enabled: false
+    # resources:
+    #   requests:
+    #     # Update values as required for your cluster
+    #     cpu: "100m"
+    #     memory: "256Mi"
+    #   limits:
+    #     # Update values as required for your cluster
+    #     cpu: "500m"
+    #     memory: "1024Mi"

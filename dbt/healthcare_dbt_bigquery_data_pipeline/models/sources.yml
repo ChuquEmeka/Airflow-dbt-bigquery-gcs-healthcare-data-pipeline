@@ -1,0 +1,60 @@
+
+
+
+version: 2
+
+sources:
+  - name: healthcare_data
+    database: healthcare-data-project-442109
+    schema: "{{ var('schema_name', 'dev_healthcare_data') }}"
+    tables:
+      - name: patient_data_external
+        description: "External table for patient demographic data in GCS."
+        columns:
+          - name: patient_id
+            tests:
+              - unique
+              - not_null
+          - name: first_name
+            tests:
+              - not_null
+          - name: last_name
+            tests:
+              - not_null
+          - name: age
+            tests:
+              - not_null
+          - name: gender
+            tests:
+              - not_null
+
+      - name: ehr_data_external
+        description: "External table for electronic health records in GCS."
+        columns:
+          - name: patient_id
+            tests:
+              - not_null
+          - name: diagnosis_code
+            tests:
+              - not_null
+          - name: heart_rate
+            tests:
+              - not_null
+
+      - name: claims_data_external
+        description: "External table for healthcare claims data in GCS."
+        columns:
+          - name: claim_id
+            tests:
+              - unique
+              - not_null
+          - name: patient_id
+            tests:
+              - not_null
+          - name: claim_amount
+            tests:
+              - not_null
+          - name: status
+            tests:
+              - not_null
+

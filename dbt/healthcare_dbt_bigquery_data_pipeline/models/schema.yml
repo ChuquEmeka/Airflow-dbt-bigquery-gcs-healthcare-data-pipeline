@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: chronic_conditions_summary
+    description: "Summarizes the prevalence of chronic conditions among patients."
+    columns:
+      - name: diagnosis_code
+        tests:
+          - unique
+          - not_null
+      - name: diagnosis_desc
+        tests:
+          - not_null
+      - name: patient_count
+        tests:
+          - not_null
+
+  - name: patient_demographics
+    description: "Aggregates patient demographics by age group, gender, and insurance type."
+    columns:
+      - name: age_group
+        tests:
+          - not_null
+      - name: gender
+        tests:
+          - not_null
+      - name: insurance_type
+        tests:
+          - not_null
+      - name: patient_count
+        tests:
+          - not_null
+
+  - name: claims_status_summary
+    description: "Summarizes claims statuses, including counts and total amounts."
+    columns:
+      - name: claim_id
+        tests:
+          - unique
+          - not_null
+      - name: status
+        tests:
+          - not_null
+      - name: claim_count
+        tests:
+          - not_null
+      - name: total_claim_amount
+        tests:
+          - not_null
+
+  - name: health_anomalies
+    description: "Flags anomalies in vital signs recorded during patient visits."
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: visit_date
+        tests:
+          - not_null
+      - name: anomaly_flag
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['High Heart Rate', 'High Blood Pressure', 'High Temperature', 'Normal']
+
+  - name: high_claim_patients
+    description: "Identifies patients whose total claim amount exceeds a predefined threshold."
+    columns:
+      - name: patient_id
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        tests:
+          - not_null
+      - name: last_name
+        tests:
+          - not_null
+      - name: age
+        tests:
+          - not_null
+      - name: gender
+        tests:
+          - not_null
+      - name: insurance_type
+        tests:
+          - not_null
